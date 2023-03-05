@@ -8,4 +8,18 @@
   font-weight: 400;
 }
 
+.main-div {
+  box-shadow:rgb(0 0 0 / 50%) 0px 30px 30px -10px, rgb(0 0 0 / 10%) 0px 30px 20px -5px;
+}
+
+@layer components {
+   .input-username-style {
+    @apply bg-transparent px-4 text-white border-b-2;
+  }
+  .input-username-style:focus {
+    outline:none;
+  
+  }
+}
+
 

@@ -2,8 +2,8 @@ import React from "react";
 
 const Header = () => {
 	return (
-		<div className="w-screen bg-red-800 text-white min-h-[5vh] flex justify-center items-center">
-			<h1>Algebra Zavrsni rad</h1>
+		<div className="w-screen bg-chat-blue text-white min-h-[8vh] flex justify-start items-center px-10">
+			<h1 className="text-xl">Algebra Chat App</h1>
 		</div>
 	);
 };
