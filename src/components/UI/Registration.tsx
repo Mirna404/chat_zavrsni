@@ -22,7 +22,7 @@ const Registration: React.FC<RegistrationProps> = ({ handleRegFormSubmit }) => {
 				<input
 					className="input-username-style"
 					type="text"
-					placeholder="Enter username..."
+					placeholder="Enter username"
 					required
 					onChange={getUsername}
 				/>

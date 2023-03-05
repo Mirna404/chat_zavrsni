@@ -31,39 +31,24 @@ export default function Messages({
 			const date = new Date(timestamp * 1000);
 			return date.toLocaleString();
 		};
-		const classNameLi = thisMemberMsg
-			? "msg-list__msg msg-list__msg--thisMember"
-			: "msg-list__msg";
-
-		const classNameMemberData = thisMemberMsg
-			? "msg-list__member-data msg-list__member-data--thisMember"
-			: "msg-list__member-data";
 
 		return (
 			// <li className={classNameLi} key={id} data-id={member.id}>
-			<li
-				className="overflow-auto flex flex-col-reverse"
-				key={id}
-				data-id={member.id}
-			>
+			<div className="flex flex-col" key={id} data-id={member.id}>
 				<div className="">
-					<div className={classNameMemberData}>
-						<span className="msg-list__username">{username}</span>
+					<div className="">
+						<span className="">{username}</span>
 					</div>
 					<div
-						className="msg-list__text border-2 bg-chat-gray flex text-white text-sm rounded-xl h-10 w-fit mx-5 p-4 items-center"
+						className=" border-2 bg-chat-gray flex text-white text-sm rounded-xl h-10 w-fit mx-5 p-4 items-center"
 						title={convertUnixTimestamp(parseInt(timestamp))}
 					>
 						{data}
 					</div>
 				</div>
-			</li>
+			</div>
 		);
 	}
 
-	return (
-		<ul className="msg-list h-[88%] flex flex-col-reverse">
-			{messages.map(renderMessage)}
-		</ul>
-	);
+	return <>{messages.map(renderMessage)}</>;
 }

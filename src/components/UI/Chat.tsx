@@ -170,12 +170,16 @@ const Chat: React.FC = () => {
 		</div>
 	) : (
 		<div className="bg-chat-ghost h-[70vh] w-1/3 main-div absolute rounded-2xl">
-			<Messages
-				messages={chat.messages}
-				thisMember={chat.member}
-				username={chat.member.username}
-			/>
-			<Input onSendMessage={onSendMessage} />
+			<div className=" flex flex-col items-start h-5/6 justify-end">
+				<Messages
+					messages={chat.messages}
+					thisMember={chat.member}
+					username={chat.member.username}
+				/>
+			</div>
+			<div className="h-1/10">
+				<Input onSendMessage={onSendMessage} />
+			</div>
 		</div>
 	);
 };
