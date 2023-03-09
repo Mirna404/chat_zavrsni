@@ -6,7 +6,7 @@ interface Message {
 }
 
 interface Member {
-	username: string;
+	user: string;
 }
 
 interface MessagesProps {
@@ -24,7 +24,7 @@ export default function Messages({ messages }: MessagesProps) {
 		return (
 			<div key={id} className="my-2">
 				<div className="px-4 py-2 rounded-xl bg-yellow-300 max-w-[80%]">
-					<p className="text-xs font-semibold ">{message.member}</p>
+					<p className="text-xs font-semibold ">{message.user}</p>
 					<p className="text-sm">{data}</p>
 					<p className="text-xs text-right">
 						{convertUnixTimestamp(parseInt(timestamp))}
