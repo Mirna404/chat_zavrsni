@@ -31,7 +31,7 @@ const Registration: React.FC<RegistrationProps> = ({ handleRegFormSubmit }) => {
 					className="bg-chat-orange border-4 border-chat-blue hover:opacity-80 text-white rounded-2xl p-2"
 					type="submit"
 				>
-					Start chatting
+					Start chating
 				</button>
 			</form>
 		</div>

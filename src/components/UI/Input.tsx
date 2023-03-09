@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import { Button } from "./Button";
 import SendBtn from "../../assets/send.svg";
@@ -8,6 +8,8 @@ interface Props {
 }
 
 export default function Input({ onSendMessage }: Props) {
+	const inputRef = useRef<HTMLInputElement>(null);
+
 	const initialState = {
 		text: "",
 	};
@@ -20,26 +22,25 @@ export default function Input({ onSendMessage }: Props) {
 
 	function onSubmit(e: React.FormEvent<HTMLFormElement>) {
 		e.preventDefault();
-		const input = document.getElementsByClassName(
-			"msg-form__input"
-		)[0] as HTMLInputElement;
 		if (state.text === "") {
-			input.placeholder = "You need to enter something...";
+			inputRef.current?.setAttribute(
+				"placeholder",
+				"You need to enter something..."
+			);
 		} else {
 			onSendMessage(state.text);
 			setState({ text: "" });
-			input.placeholder = "Enter your message...";
-			input.focus();
+			inputRef.current?.focus();
 		}
 	}
 
 	function onClick(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-		const input = document.getElementsByClassName(
-			"msg-form__input"
-		)[0] as HTMLInputElement;
-		input.value = input.value + e.currentTarget.innerHTML;
-		setState({ text: input.value });
-		input.focus();
+		inputRef.current?.focus();
+		const input = inputRef.current;
+		if (input) {
+			input.value = input.value + e.currentTarget.innerHTML;
+			setState({ text: input.value });
+		}
 	}
 
 	return (
@@ -54,6 +55,7 @@ export default function Input({ onSendMessage }: Props) {
 					value={state.text}
 					type="text"
 					placeholder="Start typing your message..."
+					ref={inputRef}
 					autoFocus={true}
 				/>
 				<button className="bg-chat-ghost hover:opacity-60 text-white rounded-[50px] p-2 mr-2">
