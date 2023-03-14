@@ -48,7 +48,8 @@ const Chat: React.FC = () => {
 				const { data, timestamp, id, member } = message;
 				let user = member.clientData?.username;
 				let userId = member.id;
-				const isSender = member.id === message.clientId;
+				const isSender = username === message.member.clientData.username;
+				// const isSender = member.id === message.clientId;
 				setIsSender(isSender);
 				// console.log(message.clientId);
 				// console.log(isSender);
@@ -70,7 +71,7 @@ const Chat: React.FC = () => {
 		};
 	}, [chat.member]);
 
-	console.log(isSender);
+	// console.log(isSender);
 
 	const handleRegFormSubmit = (username: string) => {
 		setUsername(username);
@@ -90,7 +91,11 @@ const Chat: React.FC = () => {
 
 	return chat.member.username ? (
 		<div className="h-[80vh] absolute w-1/3 bg-chat-ghost">
-			<div className="flex flex-col items-start h-[70vh] main-div rounded-t-2xl overflow-auto justify-end">
+			<div
+				className={`flex flex-col h-[70vh] main-div rounded-t-2xl overflow-auto justify-end ${
+					isSender ? "items-end" : "items-start"
+				}`}
+			>
 				<div className="flex flex-col items-start w-[50%] max-h-5/6 justify-end">
 					<Messages messages={chat.messages} sender={isSender} />
 				</div>
