@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Registration from "./Registration";
 import Messages from "./Messages";
 import Input from "./Input";
+
 interface ChatState {
 	member: Member;
 	messages: Message[];
@@ -24,6 +25,7 @@ const Chat: React.FC = () => {
 	const [drone, setDrone] = useState<typeof Scaledrone | null>(null);
 	const [username, setUsername] = useState("");
 	const [activeUsers, setActiveUsers] = useState([]);
+	const [isSender, setIsSender] = useState<null | boolean>(null);
 
 	useEffect(() => {
 		if (!chat.member) {
@@ -39,22 +41,23 @@ const Chat: React.FC = () => {
 			setChat((prevState) => ({ ...prevState, member: chat.member }));
 			const room = drone.subscribe("observable-AlgebraZavrsni");
 			room.on("members", function (members: any) {
-				console.log(members);
 				setActiveUsers(members);
 			});
-			room.on("member_join", function (member: any) {
-				// Member object                setActiveUsers(activeUsers.push(member))
-			});
+			room.on("member_join", function (member: any) {});
 			room.on("message", (message: Message) => {
 				const { data, timestamp, id, member } = message;
 				let user = member.clientData?.username;
+				let userId = member.id;
+				const isSender = member.id === message.clientId;
+				setIsSender(isSender);
+				// console.log(message.clientId);
+				// console.log(isSender);
 				const newMessage = {
 					user,
 					data,
 					timestamp,
 					id,
 				};
-				console.log(newMessage);
 				setChat((prevState) => ({
 					...prevState,
 					messages: [...prevState.messages, newMessage],
@@ -66,6 +69,9 @@ const Chat: React.FC = () => {
 			drone.close();
 		};
 	}, [chat.member]);
+
+	console.log(isSender);
+
 	const handleRegFormSubmit = (username: string) => {
 		setUsername(username);
 		const newMember: Member = {
@@ -81,27 +87,23 @@ const Chat: React.FC = () => {
 			});
 		}
 	};
+
 	return chat.member.username ? (
-		<div className="bg-chat-ghost h-[70vh] w-1/3 main-div absolute rounded-2xl">
-			{" "}
-			<div className="flex flex-col items-start h-5/6 justify-end">
-				{" "}
-				<Messages messages={chat.messages} />{" "}
-			</div>{" "}
-			<div className="h-1/10">
-				{" "}
-				<Input onSendMessage={onSendMessage} />{" "}
-			</div>{" "}
+		<div className="h-[80vh] absolute w-1/3 bg-chat-ghost">
+			<div className="flex flex-col items-start h-[70vh] main-div rounded-t-2xl overflow-auto justify-end">
+				<div className="flex flex-col items-start w-[50%] max-h-5/6 justify-end">
+					<Messages messages={chat.messages} sender={isSender} />
+				</div>
+			</div>
+			<div className="bg-chat-ghost h-[10vh] main-div  rounded-b-2xl">
+				<Input onSendMessage={onSendMessage} />
+			</div>
 		</div>
 	) : (
 		<div className="bg-chat-blue2 h-2/3 flex flex-col justify-center items-center px-12 py-16 rounded-xl text-white">
-			{" "}
-			<h1 className="text-2xl">Welcome to a simple Chat App!</h1>{" "}
-			<h2 className="text-base py-2">
-				{" "}
-				Enter your username and start chatting!{" "}
-			</h2>{" "}
-			<Registration handleRegFormSubmit={handleRegFormSubmit} />{" "}
+			<h1 className="text-2xl">Welcome to a simple Chat App!</h1>
+			<h2 className="text-base py-2">Enter your username and start chating!</h2>
+			<Registration handleRegFormSubmit={handleRegFormSubmit} />
 		</div>
 	);
 };

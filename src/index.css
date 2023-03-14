@@ -18,8 +18,14 @@
   }
   .input-username-style:focus {
     outline:none;
-  
   }
 }
 
+.self {
+  justify-content: flex-end;
+  background-color:red!important;
+}
 
+.other {
+  background-coor:black!important;
+}
