@@ -5,81 +5,83 @@ import Input from "./Input";
 
 interface ChatState {
 	member: Member;
-	messages: Message[];
+	messages: MessageType[];
 }
-interface Message {
-	member: string;
+export interface MessageType {
+	member: { clientData: Member; id: string };
 	data: string;
-	timestamp: string;
+	timestamp: number;
 	id: string;
 }
-interface Member {
+export interface Member {
 	username: string;
+	id: string;
 }
+
 const initialChatState: ChatState = {
-	member: { username: "" },
-	messages: [] as Message[],
+	member: { username: "", id: "" },
+	messages: [] as MessageType[],
 };
 const Chat: React.FC = () => {
 	const [chat, setChat] = useState(initialChatState);
-	const [drone, setDrone] = useState<typeof Scaledrone | null>(null);
+	const [drone, setDrone] = useState(null);
 	const [username, setUsername] = useState("");
 	const [activeUsers, setActiveUsers] = useState([]);
 	const [isSender, setIsSender] = useState<null | boolean>(null);
 
 	useEffect(() => {
-		if (!chat.member) {
-			return;
+		let newDrone: any;
+
+		if (username) {
+			newDrone = new Scaledrone("wh7R1LadIE1FZWjd", {
+				data: chat.member,
+			});
+
+			setDrone(newDrone);
 		}
-		const drone = new Scaledrone("wh7R1LadIE1FZWjd", {
-			data: chat.member,
-		}) as Scaledrone & { clientId?: string };
-		drone.on("open", (error?: Error) => {
-			if (error) {
-				return console.error(error);
-			}
-			setChat((prevState) => ({ ...prevState, member: chat.member }));
+
+		return () => {
+			if (newDrone) newDrone.close();
+		};
+	}, [username]);
+
+	useEffect(() => {
+		if (drone) {
+			drone.on("open", (error?: Error) => {
+				if (error) {
+					return console.error(error);
+				}
+
+				setChat((prev) => ({
+					...prev,
+					member: { username: username, id: drone.clientId },
+				}));
+			});
+
 			const room = drone.subscribe("observable-AlgebraZavrsni");
+
 			room.on("members", function (members: any) {
 				setActiveUsers(members);
 			});
-			room.on("member_join", function (member: any) {});
-			room.on("message", (message: Message) => {
-				const { data, timestamp, id, member } = message;
-				let user = member.clientData?.username;
-				let userId = member.id;
-				const isSender = username === message.member.clientData.username;
-				// const isSender = member.id === message.clientId;
-				setIsSender(isSender);
-				// console.log(message.clientId);
-				// console.log(isSender);
-				const newMessage = {
-					user,
-					data,
-					timestamp,
-					id,
-				};
-				setChat((prevState) => ({
-					...prevState,
-					messages: [...prevState.messages, newMessage],
+
+			room.on("message", (message: MessageType) => {
+				setChat((prev) => ({
+					...prev,
+					messages: [...prev.messages, message],
 				}));
 			});
-		});
-		setDrone(drone);
-		return () => {
-			drone.close();
-		};
-	}, [chat.member]);
+		}
+	}, [drone]);
 
-	// console.log(isSender);
-
-	const handleRegFormSubmit = (username: string) => {
-		setUsername(username);
-		const newMember: Member = {
-			username: username,
-		};
-		setChat((prevState) => ({ ...prevState, member: newMember }));
+	const handleRegFormSubmit = (newUser: string) => {
+		setUsername(newUser);
+		/* const newMember: Member = {
+      username: username,
+	  id: ""
+    };
+    setChat((prevState) => ({ ...prevState, member: newMember })); */
 	};
+
 	const onSendMessage = (message: string) => {
 		if (drone) {
 			drone.publish({
@@ -90,14 +92,10 @@ const Chat: React.FC = () => {
 	};
 
 	return chat.member.username ? (
-		<div className="h-[80vh] absolute w-1/3 bg-chat-ghost">
-			<div
-				className={`flex flex-col h-[70vh] main-div rounded-t-2xl overflow-auto justify-end ${
-					isSender ? "items-end" : "items-start"
-				}`}
-			>
+		<div className="h-[80vh] absolute w-1/3 bg-chat-ghost md:w-[90vw] rounded-t-2xl">
+			<div className="flex flex-col items-start h-[70vh] main-div overflow-auto justify-end">
 				<div className="flex flex-col items-start w-[50%] max-h-5/6 justify-end">
-					<Messages messages={chat.messages} sender={isSender} />
+					<Messages messages={chat.messages} myId={chat.member.id} />
 				</div>
 			</div>
 			<div className="bg-chat-ghost h-[10vh] main-div  rounded-b-2xl">
