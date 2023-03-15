@@ -36,6 +36,7 @@ const Chat: React.FC = () => {
 			newDrone = new Scaledrone("wh7R1LadIE1FZWjd", {
 				data: chat.member,
 			});
+
 			newDrone.on("open", (error?: Error) => {
 				if (error) {
 					return console.error(error);
