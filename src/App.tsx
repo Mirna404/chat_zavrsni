@@ -4,8 +4,6 @@ import Footer from "./components/Footer";
 import MainComponent from "./components/MainComponent";
 
 function App() {
-	const [count, setCount] = useState(0);
-
 	return (
 		<>
 			<Header />

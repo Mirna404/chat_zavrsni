@@ -16,32 +16,32 @@ const MessageInstance = ({
 	};
 
 	const messageClass = myId === messageData.member.id;
-	console.log(messageClass + "ovoooo");
+
 	return (
 		<div
 			key={id}
 			className={`my-2 mx-4 flex w-[90%] ${
-				messageClass ? "justify-end items-end" : "justify-start"
+				messageClass ? "justify-end" : "justify-start"
 			}`}
 		>
 			<div
-				className={`w-2/3 rounded-xl ${
-					messageClass ? "bg-chat-orange" : "bg-chat-blue2"
+				className={`w-max rounded-xl px-4 py-2 flex flex-col ${
+					messageClass
+						? " bg-chat-orange items-end"
+						: " bg-chat-blue2 items-start"
 				}`}
 			>
-				<div className="px-4 py-2  text-white">
-					<p
-						className={`text-sm font-semibold ${
-							messageClass ? "text-chat-blue" : "text-chat-orange"
-						}`}
-					>
-						{member.clientData.username}
-					</p>
-					<p className="text-sm">{data}</p>
-					<p className="text-xs text-right text-gray-300">
-						{convertUnixTimestamp(timestamp)}
-					</p>
-				</div>
+				<p
+					className={`text-sm font-semibold  ${
+						messageClass ? "text-chat-blue" : "text-chat-orange"
+					}`}
+				>
+					{member.clientData.username}
+				</p>
+				<p className="text-sm text-white">{data}</p>
+				<p className="text-xs text-right text-gray-300">
+					{convertUnixTimestamp(timestamp)}
+				</p>
 			</div>
 		</div>
 	);

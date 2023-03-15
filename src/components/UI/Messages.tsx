@@ -9,10 +9,10 @@ export default function Messages({
 	myId: string;
 }) {
 	return (
-		<>
+		<div className="overflow-y-auto w-full">
 			{messages.map((message) => (
 				<MessageInstance messageData={message} myId={myId} />
 			))}
-		</>
+		</div>
 	);
 }

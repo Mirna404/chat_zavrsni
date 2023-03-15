@@ -18,7 +18,7 @@ const Registration: React.FC<RegistrationProps> = ({ handleRegFormSubmit }) => {
 
 	return (
 		<div className="flex justify-center py-6 text-white">
-			<form className="flex gap-4" onSubmit={submitForm}>
+			<form className="flex md:flex-col gap-4 md:gap-12" onSubmit={submitForm}>
 				<input
 					className="input-username-style"
 					type="text"
