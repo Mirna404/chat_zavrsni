@@ -3,6 +3,17 @@ import Registration from "./Registration";
 import Messages from "./Messages";
 import Input from "./Input";
 
+interface Drone {
+	clientId: string;
+	close(): void;
+	subscribe(room: string): Room;
+	publish(data: any): void;
+}
+
+interface Room {
+	on(event: string, callback: Function): void;
+}
+
 interface ChatState {
 	member: Member;
 	messages: MessageType[];
@@ -27,7 +38,7 @@ const initialChatState: ChatState = {
 
 const Chat: React.FC = () => {
 	const [chat, setChat] = useState(initialChatState);
-	const [drone, setDrone] = useState(null);
+	const [drone, setDrone] = useState<Drone | null>(null);
 	const [activeUsers, setActiveUsers] = useState([]);
 
 	useEffect(() => {
