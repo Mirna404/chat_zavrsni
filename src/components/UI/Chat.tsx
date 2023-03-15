@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Registration from "./Registration";
 import Messages from "./Messages";
 import Input from "./Input";
-
 interface ChatState {
 	member: Member;
 	messages: MessageType[];
@@ -17,7 +16,6 @@ export interface Member {
 	username: string;
 	id: string;
 }
-
 const initialChatState: ChatState = {
 	member: { username: "", id: "" },
 	messages: [] as MessageType[],
@@ -28,43 +26,42 @@ const Chat: React.FC = () => {
 	const [username, setUsername] = useState("");
 	const [activeUsers, setActiveUsers] = useState([]);
 	const [isSender, setIsSender] = useState<null | boolean>(null);
-
 	useEffect(() => {
 		let newDrone: any;
-
-		if (username) {
+		if (chat.member.username !== "") {
+			console.log("initing new drone");
+			console.log("With:");
+			console.log(chat.member);
 			newDrone = new Scaledrone("wh7R1LadIE1FZWjd", {
 				data: chat.member,
 			});
-
-			setDrone(newDrone);
-		}
-
-		return () => {
-			if (newDrone) newDrone.close();
-		};
-	}, [username]);
-
-	useEffect(() => {
-		if (drone) {
-			drone.on("open", (error?: Error) => {
+			newDrone.on("open", (error?: Error) => {
 				if (error) {
 					return console.error(error);
 				}
-
+				setDrone(newDrone);
 				setChat((prev) => ({
 					...prev,
-					member: { username: username, id: drone.clientId },
+					member: { ...prev.member, id: newDrone.clientId },
 				}));
 			});
-
+		}
+		return () => {
+			if (newDrone && chat.member) {
+				newDrone.close();
+			}
+		};
+	}, [chat.member.username]);
+	useEffect(() => {
+		if (drone && chat.member.username) {
+			console.log("Drone is:");
+			console.log(drone);
 			const room = drone.subscribe("observable-AlgebraZavrsni");
-
 			room.on("members", function (members: any) {
 				setActiveUsers(members);
 			});
-
 			room.on("message", (message: MessageType) => {
+				console.log(message);
 				setChat((prev) => ({
 					...prev,
 					messages: [...prev.messages, message],
@@ -72,16 +69,12 @@ const Chat: React.FC = () => {
 			});
 		}
 	}, [drone]);
-
 	const handleRegFormSubmit = (newUser: string) => {
-		setUsername(newUser);
-		/* const newMember: Member = {
-      username: username,
-	  id: ""
-    };
-    setChat((prevState) => ({ ...prevState, member: newMember })); */
+		setChat((prev) => ({
+			...prev,
+			member: { ...prev.member, username: newUser },
+		}));
 	};
-
 	const onSendMessage = (message: string) => {
 		if (drone) {
 			drone.publish({
@@ -91,10 +84,11 @@ const Chat: React.FC = () => {
 		}
 	};
 
+	console.log(chat.member.username + "ovaj consolelog");
 	return chat.member.username ? (
-		<div className="h-[80vh] absolute w-1/3 bg-chat-ghost md:w-[90vw] rounded-t-2xl">
-			<div className="flex flex-col items-start h-[70vh] main-div overflow-auto justify-end">
-				<div className="flex flex-col items-start w-[50%] max-h-5/6 justify-end">
+		<div className="h-[80vh] absolute w-1/3 bg-chat-ghost rounded-t-2xl">
+			<div className="flex flex-col items-start h-[70vh] main-div rounded-t-2xl overflow-auto justify-end">
+				<div className="flex flex-col items-start w-full max-h-5/6 justify-end">
 					<Messages messages={chat.messages} myId={chat.member.id} />
 				</div>
 			</div>
