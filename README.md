@@ -7,8 +7,11 @@ This is a Chat app built with React, Typescript, Tailwind, and Vite.
 To get started, follow these steps:
 
 Clone this repository: git clone https://github.com/Mirna404/chat_zavrsni.git
+
 Install dependencies: npm install
+
 Start the development server: npm run dev
+
 Open your browser and navigate to http://localhost:3000
 
 ## Availible Scripts
@@ -39,6 +42,9 @@ Formats the code using Prettier.
 You can learn more about the tools used to build this app here:
 
 [React](https://reactjs.org/)
+
 [Typescript](https://www.typescriptlang.org/)
+
 [Tailwind CSS](https://tailwindcss.com/)
+
 [Vite](https://vitejs.dev/)
